@@ -23,7 +23,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtUtils utils;
 	@Autowired
-	private AppUserDetailsService pizzaUserDetailsService;
+	private AppUserDetailsService userDetailService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -51,13 +51,13 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 				if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 					// load user details from UserDetailsService
 					System.out.println("security context is null");
-					UserDetails userDetails = pizzaUserDetailsService.loadUserByUsername(userName);
+					UserDetails userDetails = userDetailService.loadUserByUsername(userName);
 					// create Authentication object , wrapping user details lifted from DB
 					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 							userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
-					//set details in auth object
-		//			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-       //			Save this authentication token in the sec ctx.
+		//set details in auth object
+		//	authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        //	Save this authentication token in the sec ctx.
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
 				else
